@@ -1,0 +1,1 @@
+# allegrolokalnie.pl-parsing
