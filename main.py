@@ -4,21 +4,26 @@ import time
 import json
 import random
 
-url = 'https://allegrolokalnie.pl/oferty/dom-i-ogrod'  # Замените на вашу ссылку
-page_limit = 1  # Замените на количество страниц, которые вы хотите обработать
+url = 'https://allegrolokalnie.pl/oferty/dziecko'  # Замените на вашу ссылку
+page_limit = 2  # Замените на количество страниц, которые вы хотите обработать
 base_url = f'{url}?page='
 blacklist_file = 'blacklist.txt'
 proxy_list = [
-    '9111.19111.1111.119:12606:5707111991',
-    '9111.19111.1111.119:12606:5707111991',
-    '9111.19111.1111.119:12606:5707111991',
-    '9111.19111.1111.119:12606:5707111991',
-    '9111.19111.1111.119:12606:5707111991',
-    '9111.19111.1111.119:12606:5707111991',
-    '9111.19111.1111.119:12606:5707111991',
-    '9111.19111.1111.119:12606:5707111991',
-    '9111.19111.1111.119:12606:5707111991',
-    '9111.19111.1111.119:12606:5707111991',
+    '93.190.142.139:12606:5707991',
+    '194.88.106.169:13752:5707993',
+    '93.190.142.139:13816:5707992',
+    '93.190.142.139:12831:5707994',
+    '185.21.60.181:12715:5707995',
+    '185.21.60.181:12451:5707996',
+    '185.21.60.181:13307:5707997',
+    '93.190.138.107:11498:5707998',
+    '185.21.60.181:12385:5707999',
+    '89.39.106.148:11951:5708000',
+    '185.21.60.181:12076:5708001',
+    '89.39.106.148:12157:5708002',
+    '89.39.106.148:14486:5708003',
+    '185.21.60.181:11229:5708004',
+    '93.190.142.139:14837:5708005'
 ]
 
 # Load the existing blacklist
@@ -29,6 +34,15 @@ except FileNotFoundError:
     blacklist_set = set()
 
 all_links = []
+
+
+
+def rem_często(element_to_remove):
+  for i in element_to_remove:
+    if i.text.strip()=="Często sprzedaje":
+      return True
+
+  return False
 
 for page_number in range(1, page_limit + 1):
     selected_proxy = random.choice(proxy_list)
@@ -49,10 +63,9 @@ for page_number in range(1, page_limit + 1):
                 href = link.get("href")
                 full_link = f'https://allegrolokalnie.pl{href}'
                 if full_link not in blacklist_set:
-                    badge = link.find("li", class_="ml-badges__badge")
-                    if badge and "Często sprzedaje" in badge.get_text():
-                        print(badge)
-                        continue  # Skip this element
+                    element_to_remove = link.find_all('li')
+                    if rem_często(element_to_remove):
+                      continue
                     all_links.append(full_link)
                     selected_proxy = random.choice(proxy_list)
                     proxies = {
